@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="100%" height="100%">
+  <rect width="400" height="320" rx="16" fill="#F8FAFC" />
+  <rect x="40" y="30" width="320" height="260" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+  
+  <!-- Red Warning Box for Rx if applicable -->
+  <rect x="55" y="45" width="290" height="36" fill="#FEF2F2" stroke="#EF4444" stroke-width="1" rx="4" />
+  <text x="200" y="62" font-family="Arial, sans-serif" font-weight="800" font-size="10" fill="#B91C1C" text-anchor="middle">SCHEDULE H1 PRESCRIPTION DRUG</text>
+  <text x="200" y="74" font-family="Arial, sans-serif" font-size="8" fill="#475569" text-anchor="middle">To be sold by retail on the prescription of a Registered Medical Practitioner only.</text>
+
+  <!-- Chemical Formulation Details -->
+  <text x="60" y="105" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="11" fill="#0F172A">COMPOSITION:</text>
+  <text x="60" y="122" font-family="'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="10" fill="#334155">Augmentin 625 Duo</text>
+  <text x="60" y="137" font-family="'Segoe UI', Roboto, sans-serif" font-size="9" fill="#475569">Each unit contains: Amoxicillin & Potassium Clavulanate Tablets IP</text>
+  <text x="60" y="152" font-family="'Segoe UI', Roboto, sans-serif" font-size="9" fill="#475569">Excipients: q.s. Colours: Approved Pharmacopoeia Colours added.</text>
+
+  <!-- Storage and Dosage -->
+  <text x="60" y="176" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="11" fill="#0F172A">DOSAGE &amp; STORAGE:</text>
+  <text x="60" y="193" font-family="'Segoe UI', Roboto, sans-serif" font-size="9" fill="#475569">Dosage: As directed by the Physician.</text>
+  <text x="60" y="208" font-family="'Segoe UI', Roboto, sans-serif" font-size="9" fill="#475569">Storage: Store below 25°C in a dry, dark place. Keep out of reach of children.</text>
+
+  <!-- Manufacturer Credentials -->
+  <line x1="55" y1="225" x2="345" y2="225" stroke="#E2E8F0" stroke-width="1" />
+  <text x="60" y="244" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="10" fill="#1E293B">Manufactured in India by:</text>
+  <text x="60" y="258" font-family="'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="10" fill="#D32F2F">GlaxoSmithKline (GSK)</text>
+  <text x="60" y="272" font-family="'Segoe UI', Roboto, sans-serif" font-size="8" fill="#64748B">Mfg. Lic. No.: G/25/1842 | GMP &amp; ISO 9001:2015 Certified Facility</text>
+</svg>

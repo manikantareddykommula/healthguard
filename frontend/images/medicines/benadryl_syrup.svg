@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="100%" height="100%">
+  <defs>
+    <radialGradient id="pillShine" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#8E1600" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </radialGradient>
+    <filter id="macroShadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.2" />
+    </filter>
+  </defs>
+  <rect width="400" height="320" rx="16" fill="#F1F5F9" />
+  
+  <!-- Dosage Measurement Grid in background -->
+  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E2E8F0" stroke-width="0.8" />
+  </pattern>
+  <rect width="400" height="320" fill="url(#grid)" />
+
+  <text x="200" y="45" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="14" fill="#334155" text-anchor="middle">MACRO PHARMACEUTICAL DOSAGE VIEW</text>
+  <text x="200" y="65" font-family="'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="11" fill="#64748B" text-anchor="middle">Benadryl Cough Syrup — 100 ml Oral Solution</text>
+
+  <!-- Macro Central Dose Graphic -->
+  <g filter="url(#macroShadow)">
+    
+
+    
+
+    
+    <!-- Macro Syrup Cup & Bottle -->
+    <g transform="translate(160, 110)">
+      <!-- Measuring cup -->
+      <polygon points="120,40 145,110 85,110 110,40" fill="#E0F2FE" opacity="0.8" stroke="#0284C7" stroke-width="1.5" />
+      <!-- Liquid level -->
+      <polygon points="115,65 140,105 90,105 112,65" fill="#C0392B" opacity="0.85" />
+      <!-- Markings -->
+      <line x1="98" y1="65" x2="115" y2="65" stroke="#0369A1" stroke-width="1" />
+      <text x="94" y="68" font-family="Arial" font-size="8" font-weight="700" fill="#0369A1" text-anchor="end">10 ml</text>
+      <line x1="93" y1="85" x2="110" y2="85" stroke="#0369A1" stroke-width="1" />
+      <text x="89" y="88" font-family="Arial" font-size="8" font-weight="700" fill="#0369A1" text-anchor="end">5 ml</text>
+      <!-- Bottle neck -->
+      <rect x="-20" y="10" width="70" height="110" rx="8" fill="#78350F" opacity="0.9" />
+      <rect x="0" y="-8" width="30" height="18" rx="4" fill="#F8FAFC" stroke="#CBD5E1" />
+    </g>
+    
+
+    
+
+    
+  </g>
+
+  <!-- Spec details -->
+  <rect x="80" y="270" width="240" height="28" rx="6" fill="#FFFFFF" stroke="#CBD5E1" />
+  <text x="200" y="288" font-family="'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="11" fill="#1E293B" text-anchor="middle">Form: SYRUP | Visual Quality Verified</text>
+</svg>

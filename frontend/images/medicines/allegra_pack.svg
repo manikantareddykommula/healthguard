@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="packGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.15" />
+    </filter>
+  </defs>
+  <rect width="400" height="320" rx="16" fill="#F8FAFC" />
+  
+  <!-- Packaging Carton / Blister Tray -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="40" width="300" height="240" rx="12" fill="url(#packGrad)" stroke="#CBD5E1" stroke-width="1.5" />
+    
+    <!-- Security Tamper Evident Hologram Seal -->
+    <rect x="280" y="55" width="50" height="30" rx="4" fill="url(#packGrad)" stroke="#38BDF8" stroke-width="1" />
+    <text x="305" y="73" font-family="Arial, sans-serif" font-size="8" font-weight="900" fill="#0284C7" text-anchor="middle">GENUINE</text>
+    <text x="305" y="81" font-family="Arial, sans-serif" font-size="6" fill="#64748B" text-anchor="middle">SEALED</text>
+
+    <!-- Header bar -->
+    <rect x="50" y="40" width="300" height="38" rx="12" fill="#6C3483" />
+    <rect x="50" y="66" width="300" height="12" fill="#6C3483" />
+    <text x="75" y="65" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#FFFFFF">Allegra 120 mg</text>
+    <text x="75" y="75" font-family="'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="600" fill="#F8FAFC">Sanofi India Ltd</text>
+
+    <!-- Packaging Information Specs -->
+    <text x="75" y="115" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#1E293B">Packaging &amp; Presentation Specification</text>
+    <text x="75" y="135" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" fill="#475569">Formula: Fexofenadine HCl Tablets IP</text>
+    <text x="75" y="152" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" fill="#475569">Dosage Form: Tablet</text>
+    <text x="75" y="169" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" fill="#475569">Strength: 120 mg</text>
+    <text x="75" y="186" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" fill="#475569">Pack Spec: Sealed Pharmaceutical Grade Aluminum/PVC Packaging</text>
+
+    <!-- Barcode & Batch Details -->
+    <rect x="75" y="210" width="130" height="45" fill="#FFFFFF" stroke="#E2E8F0" rx="4" />
+    <!-- Barcode lines -->
+    <path d="M 85 218 v 24 M 90 218 v 24 M 94 218 v 24 M 100 218 v 24 M 104 218 v 24 M 110 218 v 24 M 116 218 v 24 M 120 218 v 24 M 126 218 v 24 M 132 218 v 24 M 138 218 v 24 M 145 218 v 24 M 152 218 v 24 M 160 218 v 24 M 168 218 v 24 M 174 218 v 24 M 182 218 v 24 M 190 218 v 24" stroke="#0F172A" stroke-width="2" />
+    <text x="140" y="250" font-family="monospace" font-size="7" fill="#64748B" text-anchor="middle">8901234 567890</text>
+
+    <!-- Batch details -->
+    <text x="225" y="222" font-family="monospace" font-size="9" fill="#1E293B">B.No: HG-26A09</text>
+    <text x="225" y="236" font-family="monospace" font-size="9" fill="#1E293B">MFG: 08/2026</text>
+    <text x="225" y="250" font-family="monospace" font-size="9" fill="#B91C1C">EXP: 07/2028</text>
+  </g>
+</svg>

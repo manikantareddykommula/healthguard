@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedMan / HealthGuard — Modern Healthcare Management Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col font-sans">
+
+    <!-- Top Universal Healthcare Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-3">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="switchTab('dashboard')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-700 to-teal-500 text-white flex items-center justify-center shadow-md">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm1 14h-2v-3H8v-2h3V8h2v3h3v2h-3v3z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-xl font-extrabold tracking-tight text-slate-900">Health<span class="text-teal-600">Guard</span></span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-teal-100 text-teal-800 px-1.5 py-0.5 rounded">Pro B.Tech Edition</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-medium">Unified Healthcare Management &amp; Adherence Platform</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop & Tablet) -->
+                <nav class="hidden xl:flex items-center gap-1 bg-slate-100/90 p-1.5 rounded-xl text-xs font-bold overflow-x-auto">
+                    <button data-nav-tab="dashboard" class="nav-tab-btn px-3 py-2 rounded-lg bg-teal-700 text-white shadow-sm transition">
+                        📊 Dashboard
+                    </button>
+                    <button data-nav-tab="store" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        🏪 Medicines
+                    </button>
+                    <button data-nav-tab="prescriptions" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        📋 Prescriptions
+                    </button>
+                    <button data-nav-tab="reports" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        📄 Reports
+                    </button>
+                    <button data-nav-tab="monitoring" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        📈 Vitals
+                    </button>
+                    <button data-nav-tab="appointments" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        🩺 Appointments
+                    </button>
+                    <button data-nav-tab="reminders" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center gap-1">
+                        💊 3D Reminders
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </button>
+                    <button data-nav-tab="preventive" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        🛡️ Preventive
+                    </button>
+                    <button data-nav-tab="orders" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        📦 Orders
+                    </button>
+                    <button data-nav-tab="timeline" class="nav-tab-btn px-3 py-2 rounded-lg text-slate-600 hover:bg-white transition">
+                        ⏳ Timeline
+                    </button>
+                    <button data-nav-tab="ai-assistant" class="nav-tab-btn px-3 py-2 rounded-lg text-teal-700 bg-teal-50 hover:bg-teal-100 transition">
+                        🤖 AI Explainer
+                    </button>
+                </nav>
+
+                <!-- Header Actions (Role Switcher, 3D Trigger, Notifications, Cart, Profile) -->
+                <div class="flex items-center gap-2">
+                    
+                    <!-- Quick Demo Role Switcher Badge -->
+                    <div class="hidden md:flex items-center gap-1 bg-slate-100 border border-slate-200 p-1 rounded-xl text-[11px] font-bold">
+                        <span class="text-slate-400 px-1">Role:</span>
+                        <button onclick="loginAsDemoRole('patient')" id="role-btn-patient" class="px-2 py-1 rounded-lg bg-teal-600 text-white shadow-xs">Patient</button>
+                        <button onclick="loginAsDemoRole('doctor')" id="role-btn-doctor" class="px-2 py-1 rounded-lg text-slate-600 hover:bg-white">Doctor</button>
+                        <button onclick="loginAsDemoRole('admin')" id="role-btn-admin" class="px-2 py-1 rounded-lg text-slate-600 hover:bg-white">Admin</button>
+                    </div>
+
+                    <!-- Test 3D Reminder Button -->
+                    <button onclick="open3DReminderModal('med-aug-625', 'Augmentin 625 Duo Tablet', '08:00 AM', 'Tablet')" class="hidden sm:flex items-center gap-1 px-3 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow transition">
+                        <span>✨</span> 3D Demo
+                    </button>
+
+                    <!-- Notifications Center Bell -->
+                    <div class="relative">
+                        <button onclick="toggleNotificationsDropdown()" class="p-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition relative">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                            <span id="notif-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white rounded-full text-[10px] font-black flex items-center justify-center">2</span>
+                        </button>
+
+                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
+                            <div class="p-3 bg-slate-900 text-white flex items-center justify-between">
+                                <span class="text-xs font-bold uppercase tracking-wider">Clinical Alerts &amp; Notifications</span>
+                                <span class="text-[10px] text-teal-300">Active Center</span>
+                            </div>
+                            <div id="notifications-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100"></div>
+                        </div>
+                    </div>
+
+                    <!-- Shopping Cart Trigger -->
+                    <button id="cart-toggle-btn" class="flex items-center gap-1.5 px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-md transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        <span class="hidden sm:inline">Cart</span>
+                        <span class="cart-count-badge hidden bg-white text-teal-800 rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
+                    </button>
+
+                    <!-- User Profile / Auth Button -->
+                    <button onclick="switchTab('profile')" id="user-header-btn" class="flex items-center gap-2 p-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 transition">
+                        <div class="w-7 h-7 rounded-lg bg-teal-700 text-white flex items-center justify-center font-bold text-xs" id="user-avatar-text">
+                            M
+                        </div>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- Mobile Sub-navigation Menu -->
+            <div class="xl:hidden py-2 border-t border-slate-100 flex items-center gap-2 overflow-x-auto text-xs font-bold">
+                <button onclick="switchTab('dashboard')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Dashboard</button>
+                <button onclick="switchTab('store')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Medicines</button>
+                <button onclick="switchTab('prescriptions')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Prescriptions</button>
+                <button onclick="switchTab('reports')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Reports</button>
+                <button onclick="switchTab('monitoring')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Vitals</button>
+                <button onclick="switchTab('appointments')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Appointments</button>
+                <button onclick="switchTab('reminders')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">3D Reminders</button>
+                <button onclick="switchTab('preventive')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Preventive</button>
+                <button onclick="switchTab('orders')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Orders</button>
+                <button onclick="switchTab('timeline')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 whitespace-nowrap">Timeline</button>
+                <button onclick="switchTab('ai-assistant')" class="px-2.5 py-1.5 rounded-lg bg-teal-50 text-teal-800 whitespace-nowrap">AI Explainer</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: PATIENT & ROLE DASHBOARD           -->
+        <!-- ========================================== -->
+        <section id="view-dashboard" class="view-section">
+            
+            <!-- Dashboard Welcome Banner -->
+            <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl mb-8 flex flex-wrap items-center justify-between gap-6">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 bg-teal-500/20 text-teal-300 text-xs font-bold rounded-full border border-teal-400/30" id="dash-role-badge">
+                            Patient Portal
+                        </span>
+                        <span class="text-xs text-teal-200" id="dash-date-str"></span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black mt-2 leading-tight">
+                        Welcome back, <span id="dash-user-name">Manik Sharma</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-teal-100 mt-1 max-w-xl">
+                        Your synchronized healthcare command center. Monitor daily medication adherence, physiological vitals, clinical reports, and upcoming appointments.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="open3DReminderModal('med-aug-625', 'Augmentin 625 Duo Tablet', '08:00 AM', 'Tablet')" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-900 rounded-xl text-xs font-black shadow-md transition flex items-center gap-1.5">
+                        <span>💊</span> Launch 3D Reminder
+                    </button>
+                    <button onclick="switchTab('monitoring')" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/20 transition">
+                        + Log Health Vitals
+                    </button>
+                </div>
+            </div>
+
+            <!-- Today's Physiological Vitals Summary Cards (Neutral Phrasing) -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-base font-extrabold text-slate-900">Today's Physiological Vitals</h2>
+                        <p class="text-xs text-slate-500">Recorded resting parameters. Values outside reference ranges recommend professional clinical evaluation.</p>
+                    </div>
+                    <button onclick="switchTab('monitoring')" class="text-xs font-bold text-teal-600 hover:text-teal-800">View Full Trends →</button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <!-- BP -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Blood Pressure</span>
+                        <div class="my-2">
+                            <span id="dash-val-bp" class="text-xl font-black text-slate-900">120/80</span>
+                            <span class="text-[10px] text-slate-400 block">mmHg (Resting)</span>
+                        </div>
+                        <span id="dash-status-bp" class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full w-max">Optimal Range</span>
+                    </div>
+
+                    <!-- Glucose -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Blood Glucose</span>
+                        <div class="my-2">
+                            <span id="dash-val-glucose" class="text-xl font-black text-slate-900">98</span>
+                            <span class="text-[10px] text-slate-400 block">mg/dL (Fasting)</span>
+                        </div>
+                        <span id="dash-status-glucose" class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full w-max">Normal Fasting</span>
+                    </div>
+
+                    <!-- Heart Rate -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Heart Rate</span>
+                        <div class="my-2">
+                            <span id="dash-val-hr" class="text-xl font-black text-slate-900">72</span>
+                            <span class="text-[10px] text-slate-400 block">BPM</span>
+                        </div>
+                        <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full w-max">Normal Sinus</span>
+                    </div>
+
+                    <!-- SpO2 -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">SpO₂ Oxygen</span>
+                        <div class="my-2">
+                            <span id="dash-val-spo2" class="text-xl font-black text-slate-900">98%</span>
+                            <span class="text-[10px] text-slate-400 block">Room air</span>
+                        </div>
+                        <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full w-max">Well Oxygenated</span>
+                    </div>
+
+                    <!-- Weight -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Body Weight</span>
+                        <div class="my-2">
+                            <span id="dash-val-weight" class="text-xl font-black text-slate-900">70.5</span>
+                            <span class="text-[10px] text-slate-400 block">kg (BMI: 23.4)</span>
+                        </div>
+                        <span class="text-[10px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full w-max">Healthy BMI</span>
+                    </div>
+
+                    <!-- Temperature -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Temperature</span>
+                        <div class="my-2">
+                            <span id="dash-val-temp" class="text-xl font-black text-slate-900">98.4°F</span>
+                            <span class="text-[10px] text-slate-400 block">Oral Basal</span>
+                        </div>
+                        <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full w-max">Afebrile</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Column Clinical Schedule Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left 2 Cols: Today's Medicines & Upcoming Reminder -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Today's Medicines & Next Reminder -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                            <div>
+                                <h3 class="text-base font-extrabold text-slate-900">Today's Prescribed Regimen</h3>
+                                <p class="text-xs text-slate-500">Scheduled clinical intake and dosage instructions</p>
+                            </div>
+                            <span class="px-2.5 py-1 bg-teal-50 text-teal-700 rounded-full text-xs font-bold">
+                                4 Active Doses
+                            </span>
+                        </div>
+
+                        <!-- Dose Items List -->
+                        <div class="divide-y divide-slate-100 my-2" id="dash-medicines-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Clinical Prescriptions & Reports -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        
+                        <!-- Recent Prescriptions -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold text-slate-900">Recent Prescriptions</h4>
+                                    <button onclick="switchTab('prescriptions')" class="text-xs text-teal-600 font-semibold hover:text-teal-800">All →</button>
+                                </div>
+                                <div id="dash-recent-prescriptions" class="space-y-2 text-xs">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Diagnostic Reports -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold text-slate-900">Recent Medical Reports</h4>
+                                    <button onclick="switchTab('reports')" class="text-xs text-teal-600 font-semibold hover:text-teal-800">Vault →</button>
+                                </div>
+                                <div id="dash-recent-reports" class="space-y-2 text-xs">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right Col: Upcoming Appointments & Preventive Care -->
+                <div class="space-y-6">
+                    
+                    <!-- Upcoming Appointment Card -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <h3 class="text-sm font-bold text-slate-900">Upcoming Consultation</h3>
+                            <button onclick="switchTab('appointments')" class="text-xs text-teal-600 font-semibold">Book →</button>
+                        </div>
+                        <div id="dash-upcoming-appt" class="pt-3">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Next Annual Health Checkup Card -->
+                    <div class="bg-gradient-to-br from-teal-50 to-emerald-50 p-6 rounded-3xl border border-teal-200 shadow-xs">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xl">🛡️</span>
+                            <h3 class="text-sm font-extrabold text-teal-900">Preventive Care Checkup</h3>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            Annual metabolic and clinical screening calculated ~1 year from your last checkup.
+                        </p>
+                        <div class="bg-white p-3.5 rounded-2xl border border-teal-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Next Scheduled Due Date</span>
+                                <strong class="text-sm font-extrabold text-teal-800" id="dash-checkup-due">Calculated Date</strong>
+                            </div>
+                            <button onclick="switchTab('preventive')" class="px-3 py-1.5 bg-teal-600 text-white rounded-xl text-xs font-bold hover:bg-teal-700 transition">
+                                Manage
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Card -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <h3 class="text-sm font-bold text-slate-900">Active Pharmacy Orders</h3>
+                            <button onclick="switchTab('orders')" class="text-xs text-teal-600 font-semibold">Track →</button>
+                        </div>
+                        <div id="dash-recent-order" class="pt-3">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: MEDICINE STORE & CATALOG           -->
+        <!-- ========================================== -->
+        <section id="view-store" class="view-section hidden">
+            <!-- Hero Promo Banner -->
+            <div class="relative rounded-3xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-6 sm:p-10 mb-8 overflow-hidden shadow-lg">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/20 text-teal-200 text-xs font-bold border border-teal-400/30 mb-3">
+                        <span>🛡️</span> Certified Pharmaceutical Dispensation
+                    </span>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                        Verified Medicine Store &amp; HealthGuard Care
+                    </h1>
+                    <p class="mt-2 text-sm text-teal-100 leading-relaxed">
+                        Search, view, compare, and order authentic medications with doctor prescription linking and smart 3D adherence reminders.
+                    </p>
+
+                    <!-- Search Input Bar -->
+                    <div class="mt-6 flex items-center bg-white rounded-2xl p-1.5 shadow-xl">
+                        <div class="pl-3 text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </div>
+                        <input id="search-input" type="text" placeholder="Search medicines by brand name, generic molecule, manufacturer..." class="w-full px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent">
+                        <button onclick="renderMedicineGrid()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl transition">
+                            Search
+                        </button>
+                    </div>
+
+                    <!-- Dosage Form Quick Filter Pills -->
+                    <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
+                        <span class="text-teal-200 font-semibold text-[11px]">Dosage Form:</span>
+                        <button data-filter-form="all" class="active-pill px-3 py-1 rounded-full bg-teal-600 text-white font-bold transition">All</button>
+                        <button data-filter-form="tablet" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold transition">Tablets</button>
+                        <button data-filter-form="capsule" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold transition">Capsules</button>
+                        <button data-filter-form="syrup" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold transition">Syrups</button>
+                        <button data-filter-form="inhaler" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold transition">Inhalers</button>
+                        <button data-filter-form="cream" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold transition">Creams/Gels</button>
+                        <button data-filter-form="drops" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold transition">Drops</button>
+                    </div>
+                </div>
+
+                <div class="hidden lg:block absolute right-8 bottom-4 opacity-15">
+                    <span class="text-9xl font-black">Rx</span>
+                </div>
+            </div>
+
+            <!-- Store Layout: Filter Sidebar + Medicine Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Sidebar Filters -->
+                <aside class="lg:col-span-1 space-y-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <h3 class="font-bold text-slate-900 text-sm">Filters</h3>
+                            <button onclick="resetFilters()" class="text-xs font-semibold text-teal-600 hover:text-teal-800">Reset All</button>
+                        </div>
+
+                        <!-- Sorting -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Sort Results</label>
+                            <select id="filter-sort" onchange="renderMedicineGrid()" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                <option value="featured">Featured Standards</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
+                                <option value="name_asc">Name: A to Z</option>
+                            </select>
+                        </div>
+
+                        <!-- Prescription Requirement -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Prescription Type</label>
+                            <select id="filter-rx-req" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                <option value="all">All Medicines</option>
+                                <option value="rx">Prescription Required (Rx)</option>
+                                <option value="otc">Over-The-Counter (OTC Direct)</option>
+                            </select>
+                        </div>
+
+                        <!-- Therapeutic Category -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Health Category</label>
+                            <select id="filter-category" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                <option value="all">All Categories</option>
+                                <option value="antibiotics">Antibiotics &amp; Infections</option>
+                                <option value="pain">Pain Relief &amp; Fever</option>
+                                <option value="respiratory">Respiratory &amp; Asthma</option>
+                                <option value="cough">Cough &amp; Cold</option>
+                                <option value="diabetes">Diabetes Care</option>
+                                <option value="gastro">Gastroenterology &amp; Antacids</option>
+                                <option value="cardiac">Cardiac &amp; Cholesterol</option>
+                                <option value="vitamins">Vitamins &amp; Supplements</option>
+                                <option value="eye">Eye &amp; Ear Care</option>
+                                <option value="allergy">Allergy &amp; Antihistamines</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Range Slider -->
+                        <div>
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 uppercase mb-2">
+                                <span>Max Price</span>
+                                <span id="price-display" class="text-teal-600 font-extrabold text-sm">₹300</span>
+                            </div>
+                            <input id="price-slider" type="range" min="20" max="300" step="10" value="300" class="w-full accent-teal-600 cursor-pointer">
+                            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                                <span>₹20</span>
+                                <span>₹300+</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-teal-50/70 p-4 rounded-xl border border-teal-100 text-xs space-y-2">
+                            <span class="font-bold text-teal-900 block">HealthGuard Guarantee</span>
+                            <p class="text-slate-600 leading-relaxed text-[11px]">
+                                • 100% genuine sealed packs from licensed pharmaceutical suppliers.<br>
+                                • Strict cold-chain and temperature controlled storage.<br>
+                                • Verified by licensed clinical pharmacists before dispensing.
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Products Grid -->
+                <div class="lg:col-span-3">
+                    <div class="flex items-center justify-between mb-4">
+                        <span id="results-count" class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            12 Medicines Available
+                        </span>
+                        <div class="text-xs text-slate-400">
+                            Verified real pharmaceutical formulations (IP)
+                        </div>
+                    </div>
+
+                    <div id="medicine-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Populated dynamically by app.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: PRESCRIPTIONS & DOCTOR DESK        -->
+        <!-- ========================================== -->
+        <section id="view-prescriptions" class="view-section hidden">
+            <div class="max-w-5xl mx-auto space-y-8">
+                
+                <!-- Doctor Action: Create New Digital Prescription (Visible to Doctor) -->
+                <div id="doctor-prescribe-card" class="bg-white p-6 sm:p-8 rounded-3xl border border-teal-200 shadow-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                        <div>
+                            <span class="px-2.5 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-full">Doctor Clinical Console</span>
+                            <h2 class="text-xl font-bold text-slate-900 mt-1">Issue Digital Medical Prescription</h2>
+                            <p class="text-xs text-slate-500">Electronically sign and authorize prescription medications directly to patient profile.</p>
+                        </div>
+                        <span class="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-xl">
+                            Doctor: <span id="rx-doc-name-badge">Dr. Priya Nair, MD</span>
+                        </span>
+                    </div>
+
+                    <form onsubmit="handleCreateDoctorPrescription(event)" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Patient Name</label>
+                            <input id="rx-input-patient" type="text" required value="Manik Sharma" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Medicine</label>
+                            <select id="rx-input-medicine" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                                <option value="Augmentin 625 Duo Tablet">Augmentin 625 Duo Tablet</option>
+                                <option value="Asthalin Inhaler 100 mcg">Asthalin Inhaler 100 mcg</option>
+                                <option value="Pan 40 Tablet">Pan 40 Tablet</option>
+                                <option value="Glycomet-GP 1 Tablet">Glycomet-GP 1 Tablet</option>
+                                <option value="Atorva 20 Tablet">Atorva 20 Tablet</option>
+                                <option value="Allegra 120 mg Tablet">Allegra 120 mg Tablet</option>
+                                <option value="Ciplox Eye/Ear Drops 10ml">Ciplox Eye/Ear Drops 10ml</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Dosage Form &amp; Strength</label>
+                            <input id="rx-input-dosage" type="text" required value="1 tablet" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Frequency</label>
+                            <select id="rx-input-freq" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                                <option value="Once Daily (Morning)">Once Daily (Morning)</option>
+                                <option value="Twice Daily (Morning & Night)">Twice Daily (Morning & Night)</option>
+                                <option value="Thrice Daily (TDS)">Thrice Daily (TDS)</option>
+                                <option value="As Needed (PRN)">As Needed (PRN)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Duration</label>
+                            <input id="rx-input-duration" type="text" required value="5 Days" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Follow-up Date</label>
+                            <input id="rx-input-followup" type="date" value="2026-10-14" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block font-bold text-slate-700 mb-1">Clinical Instructions &amp; Dietary Context</label>
+                            <input id="rx-input-instructions" type="text" value="Take with meals to minimize GI discomfort. Complete entire antibiotic course." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Recommended Diagnostic Tests</label>
+                            <input id="rx-input-tests" type="text" value="Peak Flow Diary, Sputum culture" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div class="sm:col-span-3 flex justify-end pt-2">
+                            <button type="submit" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                                <span>✍️</span> Issue Digital Prescription
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Pharmacist Verification Review Queue -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <div>
+                            <h3 class="text-base font-extrabold text-slate-900">Clinical Prescription Verification Desk</h3>
+                            <p class="text-xs text-slate-500">Duty Pharmacist Reviewer: <strong>Dr. Shalini Verma, PharmD (Reg #PHA-DL-8492)</strong></p>
+                        </div>
+                        <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                            Schedule H/H1 Verification Mandatory
+                        </span>
+                    </div>
+
+                    <div id="pharmacist-desk-container" class="mt-6 space-y-4">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: MEDICAL REPORTS VAULT              -->
+        <!-- ========================================== -->
+        <section id="view-reports" class="view-section hidden">
+            <div class="max-w-5xl mx-auto space-y-8">
+                
+                <!-- Vault Header & Upload Card -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-6">
+                    <div>
+                        <span class="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full">Encrypted Clinical Vault</span>
+                        <h2 class="text-xl font-black text-slate-900 mt-1">Medical Diagnostic Reports</h2>
+                        <p class="text-xs text-slate-500 mt-1">
+                            Store and view Blood Tests, X-Rays, MRI, CT, ECG, and Hospital Discharge Summaries. Supported: PDF, JPG, PNG (Max 15MB).
+                        </p>
+                    </div>
+                    <button onclick="document.getElementById('report-upload-modal').classList.remove('hidden')" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
+                        <span>📤</span> Upload Diagnostic Report
+                    </button>
+                </div>
+
+                <!-- Reports Cards Grid -->
+                <div id="reports-vault-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Populated dynamically -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: HEALTH MONITORING & VITALS         -->
+        <!-- ========================================== -->
+        <section id="view-monitoring" class="view-section hidden">
+            <div class="max-w-5xl mx-auto space-y-8">
+                
+                <!-- Vitals Header & Entry Form -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                        <div>
+                            <span class="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full">Physiological Telemetry</span>
+                            <h2 class="text-xl font-black text-slate-900 mt-1">Health Vitals &amp; Reference Thresholds</h2>
+                            <p class="text-xs text-slate-500 mt-1">Record physiological readings over time. Evaluates neutral clinical reference limits.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="exportHealthHistoryCSV()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <span>📥</span> Export CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Log Vitals Form -->
+                    <form onsubmit="handleLogVitals(event)" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Measurement Type</label>
+                            <select id="vitals-input-type" onchange="adjustVitalsInputs()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+                                <option value="blood_pressure">Blood Pressure (mmHg)</option>
+                                <option value="glucose">Blood Glucose (mg/dL)</option>
+                                <option value="heart_rate">Heart Rate (BPM)</option>
+                                <option value="spo2">Oxygen SpO₂ (%)</option>
+                                <option value="weight">Body Weight (kg)</option>
+                                <option value="temperature">Temperature (°F)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label id="vitals-val1-label" class="block font-bold text-slate-700 mb-1">Systolic / Primary</label>
+                            <input id="vitals-input-val1" type="number" step="0.1" required value="120" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+                        </div>
+                        <div id="vitals-val2-wrapper">
+                            <label class="block font-bold text-slate-700 mb-1">Diastolic (Secondary)</label>
+                            <input id="vitals-input-val2" type="number" step="0.1" value="80" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Context / State</label>
+                            <input id="vitals-input-context" type="text" value="Resting morning" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-md transition">
+                                Record Reading
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Interactive Vitals Chart Viewport -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                        <div>
+                            <h3 class="text-base font-extrabold text-slate-900" id="chart-title">Blood Pressure Physiological Trend</h3>
+                            <span class="text-xs text-slate-400">Reference standard: &lt; 120/80 mmHg</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="text-slate-400 font-bold">Range:</span>
+                            <button onclick="setVitalsTimeRange(7, this)" class="vitals-range-btn px-2.5 py-1 rounded-lg bg-teal-600 text-white font-bold">7 Days</button>
+                            <button onclick="setVitalsTimeRange(30, this)" class="vitals-range-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold">30 Days</button>
+                            <button onclick="setVitalsTimeRange(90, this)" class="vitals-range-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold">3 Months</button>
+                            <button onclick="setVitalsTimeRange(365, this)" class="vitals-range-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold">1 Year</button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Chart View -->
+                    <div class="mt-6 h-64 w-full relative flex items-center justify-center bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden p-2">
+                        <canvas id="vitalsCanvas" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+
+                <!-- Logged Measurements History Table -->
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="text-base font-extrabold text-slate-900">Recorded Vitals History</h3>
+                        <span class="text-xs text-slate-400">Neutral medical reference range annotations</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase border-b border-slate-200">
+                                    <th class="py-3 px-4">Metric</th>
+                                    <th class="py-3 px-4">Value</th>
+                                    <th class="py-3 px-4">Context</th>
+                                    <th class="py-3 px-4">Clinical Guidance</th>
+                                    <th class="py-3 px-4">Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vitals-history-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 6: DOCTOR APPOINTMENTS                -->
+        <!-- ========================================== -->
+        <section id="view-appointments" class="view-section hidden">
+            <div class="max-w-5xl mx-auto space-y-8">
+                
+                <!-- Appointments Booking & Header -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-6">
+                    <div>
+                        <span class="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full">Clinical Consultations</span>
+                        <h2 class="text-xl font-black text-slate-900 mt-1">Book &amp; Manage Doctor Appointments</h2>
+                        <p class="text-xs text-slate-500 mt-1">Schedule consultations with verified specialists at HealthGuard premier medical centers.</p>
+                    </div>
+                    <button onclick="document.getElementById('book-appointment-modal').classList.remove('hidden')" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
+                        <span>📅</span> Request New Appointment
+                    </button>
+                </div>
+
+                <!-- Doctor Directory Cards -->
+                <div>
+                    <h3 class="text-base font-extrabold text-slate-900 mb-4">Verified Specialist Directory</h3>
+                    <div id="doctors-directory-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Scheduled Appointments List -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-extrabold text-slate-900 mb-4">Your Appointment Schedule</h3>
+                    <div id="appointments-list-container" class="space-y-4">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 7: 3D REMINDERS & ADHERENCE           -->
+        <!-- ========================================== -->
+        <section id="view-reminders" class="view-section hidden">
+            <div class="max-w-5xl mx-auto space-y-8">
+                
+                <!-- Metrics -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs text-center">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Adherence Rate</span>
+                        <div id="adherence-rate-num" class="text-3xl font-black text-teal-600 mt-1">87.5%</div>
+                        <span class="text-[11px] text-emerald-600 font-semibold">High Compliance</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs text-center">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Current Streak</span>
+                        <div id="adherence-streak-num" class="text-3xl font-black text-slate-900 mt-1">5 Days</div>
+                        <span class="text-[11px] text-teal-600 font-semibold">Verified Streak</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs text-center">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Doses Taken</span>
+                        <div id="adherence-taken-num" class="text-3xl font-black text-emerald-600 mt-1">7</div>
+                        <span class="text-[11px] text-slate-400">Confirmed on time</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs text-center">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Missed Doses</span>
+                        <div id="adherence-missed-num" class="text-3xl font-black text-amber-600 mt-1">1</div>
+                        <span class="text-[11px] text-amber-600">Review reminder</span>
+                    </div>
+                </div>
+
+                <!-- 3D Animation Launcher -->
+                <div class="bg-gradient-to-r from-teal-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-wrap items-center justify-between gap-6">
+                    <div>
+                        <span class="px-3 py-1 bg-teal-500/20 text-teal-300 text-xs font-bold rounded-full border border-teal-400/30">Three.js Procedural 3D Engine</span>
+                        <h2 class="text-xl font-bold mt-2">Interactive 3D Medicine Intake Animations</h2>
+                        <p class="text-xs text-teal-200 mt-1">
+                            Experience 360° interactive rotation, dosage-specific visual forms, glass of water, and educational esophageal transit sequence.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button onclick="open3DReminderModal('med-aug-625', 'Augmentin 625 Duo Tablet', '08:00 AM', 'Tablet')" class="px-4 py-2.5 bg-white text-teal-900 rounded-xl text-xs font-bold hover:bg-teal-50 transition shadow">
+                            💊 3D Tablet
+                        </button>
+                        <button onclick="open3DReminderModal('med-beco-z', 'Becosules Z Capsules', '01:00 PM', 'Capsule')" class="px-4 py-2.5 bg-white text-teal-900 rounded-xl text-xs font-bold hover:bg-teal-50 transition shadow">
+                            💊 3D Capsule
+                        </button>
+                        <button onclick="open3DReminderModal('med-bena-100', 'Benadryl Cough Syrup (100ml)', '09:00 PM', 'Syrup')" class="px-4 py-2.5 bg-white text-teal-900 rounded-xl text-xs font-bold hover:bg-teal-50 transition shadow">
+                            🧪 3D Syrup
+                        </button>
+                        <button onclick="open3DReminderModal('med-asth-100', 'Asthalin Inhaler 100 mcg', '02:00 PM', 'Inhaler')" class="px-4 py-2.5 bg-white text-teal-900 rounded-xl text-xs font-bold hover:bg-teal-50 transition shadow">
+                            💨 3D Inhaler
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Weekly Adherence Compliance -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+                    <h3 class="text-base font-extrabold text-slate-900 mb-4">Weekly Medication Intake Compliance</h3>
+                    <div class="grid grid-cols-7 gap-3 text-center">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100"><span class="text-xs font-bold text-slate-500 block mb-1">Mon</span><div id="adh-day-monday">✓ Taken</div></div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100"><span class="text-xs font-bold text-slate-500 block mb-1">Tue</span><div id="adh-day-tuesday">✓ Taken</div></div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100"><span class="text-xs font-bold text-slate-500 block mb-1">Wed</span><div id="adh-day-wednesday">⚠ Missed</div></div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100"><span class="text-xs font-bold text-slate-500 block mb-1">Thu</span><div id="adh-day-thursday">✓ Taken</div></div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100"><span class="text-xs font-bold text-slate-500 block mb-1">Fri</span><div id="adh-day-friday">✓ Taken</div></div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100"><span class="text-xs font-bold text-slate-500 block mb-1">Sat</span><div id="adh-day-saturday">✓ Taken</div></div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100"><span class="text-xs font-bold text-slate-500 block mb-1">Sun</span><div id="adh-day-sunday">✓ Taken</div></div>
+                    </div>
+                </div>
+
+                <!-- Intake History Table -->
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="text-base font-extrabold text-slate-900">Clinical Medication Adherence Log</h3>
+                        <span class="text-xs text-slate-400">Synchronized with doctor monitoring</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase border-b border-slate-200">
+                                    <th class="py-3 px-4">Medicine Name</th>
+                                    <th class="py-3 px-4">Scheduled</th>
+                                    <th class="py-3 px-4">Action Time</th>
+                                    <th class="py-3 px-4">Date</th>
+                                    <th class="py-3 px-4">Status</th>
+                                    <th class="py-3 px-4">Prescription Ref</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adherence-history-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 8: PREVENTIVE CARE                    -->
+        <!-- ========================================== -->
+        <section id="view-preventive" class="view-section hidden">
+            <div class="max-w-5xl mx-auto space-y-8">
+                
+                <!-- Preventive Banner -->
+                <div class="bg-gradient-to-r from-teal-800 to-emerald-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-wrap items-center justify-between gap-6">
+                    <div>
+                        <span class="px-3 py-1 bg-teal-500/20 text-teal-300 text-xs font-bold rounded-full border border-teal-400/30">Preventive Medicine &amp; Wellness</span>
+                        <h2 class="text-2xl font-black mt-2">Routine Screenings &amp; Annual Health Checkup</h2>
+                        <p class="text-xs sm:text-sm text-teal-100 mt-1 max-w-xl">
+                            Proactively track routine screenings, immunization schedules, and annual medical checkups automatically scheduled approximately 1 year from previous tests.
+                        </p>
+                    </div>
+                    <button onclick="document.getElementById('checkup-modal').classList.remove('hidden')" class="px-5 py-2.5 bg-white text-teal-900 rounded-xl text-xs font-black shadow-md transition">
+                        + Add Custom Screening
+                    </button>
+                </div>
+
+                <!-- Checkups List -->
+                <div id="preventive-checkups-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Populated dynamically -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 9: ORDERS & TRACKING                  -->
+        <!-- ========================================== -->
+        <section id="view-orders" class="view-section hidden">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-black text-slate-900">Your Medicine Orders &amp; Live Tracking</h2>
+                        <p class="text-xs text-slate-500 mt-1">Real-time status: Placed → Confirmed → Packed → Shipped → Delivered</p>
+                    </div>
+                </div>
+
+                <div id="orders-list-container">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 10: UNIFIED HEALTH TIMELINE           -->
+        <!-- ========================================== -->
+        <section id="view-timeline" class="view-section hidden">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="px-2.5 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full">Chronological Care Trail</span>
+                        <h2 class="text-xl font-black text-slate-900 mt-1">Unified Patient Health Timeline</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Chronologically integrates doctor consultations, prescriptions, reports, vitals, purchases, and doses.</p>
+                    </div>
+                    
+                    <select id="timeline-filter" onchange="renderHealthTimeline()" class="text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+                        <option value="all">All Healthcare Events</option>
+                        <option value="prescription">Prescriptions</option>
+                        <option value="report">Diagnostic Reports</option>
+                        <option value="vitals">Physiological Vitals</option>
+                        <option value="appointment">Appointments</option>
+                        <option value="purchase">Medicine Orders</option>
+                        <option value="reminder">Medication Doses</option>
+                    </select>
+                </div>
+
+                <div id="health-timeline-container" class="relative border-l-2 border-teal-200 ml-4 sm:ml-8 space-y-8 pb-8">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 11: EDUCATIONAL AI REPORT ASSISTANT   -->
+        <!-- ========================================== -->
+        <section id="view-ai-assistant" class="view-section hidden">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl">
+                    <span class="px-3 py-1 bg-teal-500/20 text-teal-300 text-xs font-bold rounded-full border border-teal-400/30">Educational Diagnostic Assistant</span>
+                    <h2 class="text-2xl font-black mt-2">Medical Terminology &amp; Lab Report Explainer</h2>
+                    <p class="text-xs sm:text-sm text-teal-100 mt-2 leading-relaxed">
+                        Look up clinical parameters (e.g. Hemoglobin, Fasting Glucose, HbA1c, Blood Pressure, Lipid Profile, Creatinine) to understand what they measure and standard reference ranges in plain English.
+                    </p>
+
+                    <!-- Search Input -->
+                    <div class="mt-6 flex items-center bg-white rounded-2xl p-1.5 shadow-xl">
+                        <input id="ai-query-input" type="text" placeholder="Enter medical term or test name (e.g. Fasting Glucose, HbA1c, Hemoglobin...)" class="w-full px-4 py-2 text-xs sm:text-sm text-slate-800 focus:outline-none">
+                        <button onclick="handleAIExplainerQuery()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl transition">
+                            Explain Term
+                        </button>
+                    </div>
+
+                    <!-- Safety Warning Banner -->
+                    <div class="mt-4 p-3 bg-amber-500/20 border border-amber-400/30 rounded-xl text-amber-200 text-xs leading-relaxed">
+                        ⚠️ <strong>Strict Medical Safety Directive:</strong> This feature is strictly educational. The AI does NOT diagnose disease, prescribe medications, alter prescribed doses, or replace clinical consultation with your licensed physician.
+                    </div>
+                </div>
+
+                <div id="ai-explainer-result" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 12: USER PROFILE & ROLES              -->
+        <!-- ========================================== -->
+        <section id="view-profile" class="view-section hidden">
+            <div class="max-w-4xl mx-auto space-y-6">
+                
+                <!-- Profile Header -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-teal-700 text-white font-black text-2xl flex items-center justify-center shadow-md" id="profile-avatar-large">
+                            M
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-xl font-black text-slate-900" id="profile-name">Manik Sharma</h2>
+                                <span class="px-2.5 py-0.5 bg-teal-100 text-teal-800 text-xs font-bold rounded-full capitalize" id="profile-role">Patient</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5" id="profile-email">patient@healthguard.com</p>
+                            <p class="text-xs text-slate-400" id="profile-phone">+91 98765 43210</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="openLoginModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                            Switch Account / Login
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Patient Profile Form -->
+                <div id="patient-profile-card" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-extrabold text-slate-900 mb-4 pb-3 border-b border-slate-100">Patient Clinical Demographics</h3>
+                    <form onsubmit="handleUpdatePatientProfile(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Age</label>
+                            <input id="prof-input-age" type="number" value="28" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Gender</label>
+                            <select id="prof-input-gender" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Blood Group</label>
+                            <input id="prof-input-blood" type="text" value="B+" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Allergies &amp; Drug Sensitivities</label>
+                            <input id="prof-input-allergies" type="text" value="Mild Dust Allergy, Penicillin-tolerant" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Emergency Contact</label>
+                            <input id="prof-input-emergency" type="text" value="+91 98111 22334 (Brother)" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Residential Address</label>
+                            <input id="prof-input-address" type="text" value="Flat 402, Green Valley Heights, Sector 14, New Delhi - 110001" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        </div>
+                        <div class="sm:col-span-2 flex justify-end pt-2">
+                            <button type="submit" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-md transition">
+                                Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Admin Management Panel (Visible to Admin) -->
+                <div id="admin-panel-card" class="hidden bg-white p-6 sm:p-8 rounded-3xl border border-purple-200 shadow-sm space-y-6">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div>
+                            <span class="px-2.5 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-full">System Administration</span>
+                            <h3 class="text-base font-extrabold text-slate-900 mt-1">Platform Control &amp; Practitioner Verification</h3>
+                        </div>
+                        <span class="text-xs text-slate-400">Security Audit Logs Enabled</span>
+                    </div>
+
+                    <!-- System Statistics -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="admin-stats-container">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Doctor Verification Controls -->
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">Physician Verification Queue</h4>
+                        <div id="admin-doctors-table" class="space-y-3">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL: 3D MEDICATION REMINDER (ENHANCED)   -->
+    <!-- ========================================== -->
+    <div id="reminder-3d-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-slate-200 flex flex-col">
+            
+            <!-- Reminder Header -->
+            <div class="p-5 bg-gradient-to-r from-teal-800 to-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/30 flex items-center justify-center text-2xl">
+                        💊
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-teal-300">Medication Reminder</span>
+                        <h3 class="text-base font-extrabold">Time to take your prescribed medicine</h3>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span id="reminder-modal-time" class="text-sm font-mono font-bold bg-white/20 px-2.5 py-1 rounded-lg">08:00 AM</span>
+                </div>
+            </div>
+
+            <!-- Medicine Context Bar -->
+            <div class="px-6 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                    <h4 id="reminder-modal-med-name" class="text-sm font-bold text-slate-900">Augmentin 625 Duo Tablet</h4>
+                    <p id="reminder-modal-instructions" class="text-xs text-slate-500">Take with water after food.</p>
+                </div>
+                <span id="reminder-modal-form" class="px-2.5 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-full">Tablet</span>
+            </div>
+
+            <!-- 3D Interactive Three.js Viewport -->
+            <div class="canvas-3d-wrapper h-72 w-full relative">
+                <div id="reminder-3d-canvas-container" class="w-full h-full">
+                    <!-- Three.js Canvas mounts here -->
+                </div>
+                
+                <!-- Status Badge Overlay -->
+                <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 shadow-sm flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-ping"></span>
+                    <span id="reminder-3d-step-desc">Interactive 3D Medicine View (Drag to Rotate)</span>
+                </div>
+
+                <!-- 3D Animation Playback Controls (Play, Pause, Replay, Reset) -->
+                <div class="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm p-1.5 rounded-xl border border-slate-200 shadow-sm">
+                    <button onclick="if(AppState.active3DExperience) AppState.active3DExperience.play()" title="Play sequence" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-700">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"/></svg>
+                    </button>
+                    <button onclick="if(AppState.active3DExperience) AppState.active3DExperience.pause()" title="Pause animation" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-700">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" clip-rule="evenodd"/></svg>
+                    </button>
+                    <button onclick="if(AppState.active3DExperience) AppState.active3DExperience.replay()" title="Replay swallowing sequence" class="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-[11px] flex items-center gap-1">
+                        <span>🔄</span> Replay
+                    </button>
+                </div>
+            </div>
+
+            <!-- Adherence Question & Action Buttons -->
+            <div class="p-6 bg-white border-t border-slate-100 text-center space-y-4">
+                <p class="text-base font-extrabold text-slate-900">
+                    Have you taken your medicine?
+                </p>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="markDoseTaken()" class="py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-black shadow-md hover:shadow-lg transition flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        ✓ Taken
+                    </button>
+                    <button onclick="snoozeDose()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold transition">
+                        Snooze (15m)
+                    </button>
+                    <button onclick="skipDosePrompt()" class="py-3 px-4 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-sm font-bold transition">
+                        Skip
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2">
+                    <span>Non-graphic, educational 3D adherence guide</span>
+                    <button onclick="close3DReminderModal()" class="text-slate-500 hover:text-slate-700 font-semibold">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: MEDICINE DETAILS MODAL & GALLERY    -->
+    <!-- ========================================== -->
+    <div id="medicine-details-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 flex flex-col">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
+                <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">
+                    Pharmaceutical Product Specification
+                </span>
+                <button onclick="closeMedicineDetails()" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="relative bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-center h-80 overflow-hidden group">
+                        <img id="modal-main-image" src="" class="max-h-72 w-auto object-contain cursor-zoom-in transition-transform duration-300" onclick="toggleImageZoom()" alt="Product View" />
+                        <button onclick="toggleImageZoom()" title="Click to zoom image" class="absolute bottom-3 right-3 p-2 bg-white/90 hover:bg-white rounded-xl shadow-sm text-slate-600 text-xs font-bold border border-slate-200 flex items-center gap-1">
+                            <span>🔍</span> Zoom
+                        </button>
+                    </div>
+
+                    <div id="modal-thumbnails" class="flex items-center gap-2 mt-4 overflow-x-auto pb-2"></div>
+
+                    <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs leading-relaxed">
+                        <strong class="block font-bold">Educational Disclaimer:</strong>
+                        This medicine information is provided strictly for educational and product-information purposes. It does not replace professional medical advice, clinical diagnosis, or consultation with a licensed healthcare practitioner.
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <div id="modal-med-rx" class="mb-2"></div>
+                        <h2 id="modal-med-name" class="text-2xl font-black text-slate-900 leading-snug"></h2>
+                        <p id="modal-med-generic" class="text-sm font-semibold text-slate-600 italic mt-0.5"></p>
+                        <p class="text-xs text-slate-400 mt-1">
+                            Brand: <strong id="modal-med-brand" class="text-slate-700"></strong> • Mfg: <span id="modal-med-mfg" class="text-slate-600"></span>
+                        </p>
+                        <p class="text-xs text-slate-500 mt-0.5">Pack Size: <span id="modal-med-pack" class="font-bold text-slate-700"></span></p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-baseline justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Offer Price</span>
+                            <div class="flex items-baseline gap-2">
+                                <span id="modal-med-price" class="text-3xl font-black text-slate-900"></span>
+                                <span id="modal-med-mrp" class="text-sm text-slate-400 line-through"></span>
+                                <span id="modal-med-discount" class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full"></span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span id="modal-med-stock" class="text-xs font-bold text-emerald-600 block"></span>
+                            <span class="text-[10px] text-slate-400">Inclusive of all taxes</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase">General Therapeutic Uses</h4>
+                        <p id="modal-med-uses" class="text-xs text-slate-700 mt-1 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100"></p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-rose-700 uppercase">Common Warnings &amp; Precautions</h4>
+                        <p id="modal-med-warnings" class="text-xs text-slate-700 mt-1 leading-relaxed bg-rose-50/50 p-3 rounded-xl border border-rose-100"></p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <span class="font-bold text-slate-500 uppercase block text-[10px]">Storage Condition</span>
+                            <p id="modal-med-storage" class="text-slate-700 mt-0.5"></p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <span class="font-bold text-slate-500 uppercase block text-[10px]">Dosage Guide</span>
+                            <p id="modal-med-instructions" class="text-slate-700 mt-0.5"></p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex items-center gap-3">
+                        <button onclick="addToCart(AppState.selectedMedicine.id, 1)" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold shadow-md transition flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: APPOINTMENT BOOKING                 -->
+    <!-- ========================================== -->
+    <div id="book-appointment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="text-base font-extrabold text-slate-900">Schedule Specialist Consultation</h3>
+                <button onclick="document.getElementById('book-appointment-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">×</button>
+            </div>
+
+            <form onsubmit="handleBookAppointment(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Select Physician</label>
+                    <select id="appt-input-doctor" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+                        <option value="usr-doctor-1|Dr. Priya Nair, MD">Dr. Priya Nair, MD — Senior Pulmonologist</option>
+                        <option value="usr-doctor-2|Dr. Rajesh Sharma, MD, DM">Dr. Rajesh Sharma, MD, DM — Cardiologist &amp; Diabetologist</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Preferred Date</label>
+                    <input id="appt-input-date" type="date" required value="2026-10-15" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Preferred Time Slot</label>
+                    <select id="appt-input-time" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        <option value="10:00 AM">10:00 AM</option>
+                        <option value="11:30 AM">11:30 AM</option>
+                        <option value="02:00 PM">02:00 PM</option>
+                        <option value="05:30 PM">05:30 PM</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Reason for Consultation</label>
+                    <textarea id="appt-input-reason" rows="2" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl" placeholder="Describe symptoms or follow-up goals..."></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="document.getElementById('book-appointment-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-teal-600 text-white rounded-xl font-bold shadow-md hover:bg-teal-700">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: MEDICAL REPORT UPLOAD               -->
+    <!-- ========================================== -->
+    <div id="report-upload-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="text-base font-extrabold text-slate-900">Upload Medical Diagnostic Report</h3>
+                <button onclick="document.getElementById('report-upload-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">×</button>
+            </div>
+
+            <form onsubmit="handleUploadReport(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Report Title / Test Name</label>
+                    <input id="rep-input-title" type="text" required placeholder="e.g. Lipid Profile & Liver Function Panel" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Report Category</label>
+                    <select id="rep-input-type" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        <option value="Blood Test">Blood Test</option>
+                        <option value="X-Ray">X-Ray</option>
+                        <option value="MRI">MRI</option>
+                        <option value="CT">CT Scan</option>
+                        <option value="ECG">ECG</option>
+                        <option value="Lab Report">Lab Report</option>
+                        <option value="Discharge Summary">Discharge Summary</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Diagnostic Laboratory / Issuing Doctor</label>
+                    <input id="rep-input-lab" type="text" required value="HealthGuard Central PathLab" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Test Date</label>
+                    <input id="rep-input-date" type="date" required value="2026-10-04" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Select File (PDF, JPG, PNG)</label>
+                    <input id="rep-input-file" type="file" accept=".pdf,image/*" required class="w-full p-2.5 bg-slate-50 border border-dashed border-slate-300 rounded-xl">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Clinical Notes</label>
+                    <input id="rep-input-notes" type="text" placeholder="Key summary or doctor remarks..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="document.getElementById('report-upload-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-teal-600 text-white rounded-xl font-bold shadow-md hover:bg-teal-700">Upload to Vault</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: AUTHENTICATION / LOGIN              -->
+    <!-- ========================================== -->
+    <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                    <h3 class="text-base font-extrabold text-slate-900">HealthGuard Secure Access</h3>
+                    <span class="text-xs text-slate-400">Role-Based Authentication Engine</span>
+                </div>
+                <button onclick="document.getElementById('auth-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">×</button>
+            </div>
+
+            <!-- 1-Click Quick Demo Accounts -->
+            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                <span class="font-bold text-slate-700 block text-[11px] uppercase">One-Click Demo Evaluator Access:</span>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="loginAsDemoRole('patient'); document.getElementById('auth-modal').classList.add('hidden')" class="p-2 bg-teal-600 text-white rounded-xl font-bold text-center hover:bg-teal-700">
+                        👤 Patient
+                    </button>
+                    <button onclick="loginAsDemoRole('doctor'); document.getElementById('auth-modal').classList.add('hidden')" class="p-2 bg-blue-600 text-white rounded-xl font-bold text-center hover:bg-blue-700">
+                        🩺 Doctor
+                    </button>
+                    <button onclick="loginAsDemoRole('admin'); document.getElementById('auth-modal').classList.add('hidden')" class="p-2 bg-purple-600 text-white rounded-xl font-bold text-center hover:bg-purple-700">
+                        🛡️ Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <form onsubmit="handleManualLogin(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Email Address</label>
+                    <input id="login-email" type="email" required value="patient@healthguard.com" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Password</label>
+                    <input id="login-password" type="password" required value="Patient@123" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                </div>
+                <button type="submit" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold shadow-md transition">
+                    Secure Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: RX VERIFICATION GATE                -->
+    <!-- ========================================== -->
+    <div id="rx-verification-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🛡️</span>
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900">Prescription Verification Required</h3>
+                        <span class="text-xs text-slate-500">Your cart contains Schedule H/H1 medications</span>
+                    </div>
+                </div>
+                <button onclick="closePrescriptionVerificationGate()" class="text-slate-400 hover:text-slate-600">×</button>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Select Existing HealthGuard Prescription</label>
+                <select id="rx-existing-selector" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-teal-500"></select>
+            </div>
+
+            <div class="flex items-center my-2 text-xs text-slate-400">
+                <div class="flex-1 border-t border-slate-200"></div>
+                <span class="px-3 uppercase font-bold text-[10px]">OR UPLOAD NEW SLIP</span>
+                <div class="flex-1 border-t border-slate-200"></div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Upload Doctor's Prescription (PDF / Image)</label>
+                <input id="rx-file-upload" type="file" accept=".pdf,image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer border border-dashed border-slate-300 rounded-xl p-3">
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-1">
+                <span class="font-bold text-slate-800 block text-[11px]">Verification Standard:</span>
+                <p class="text-[11px] leading-relaxed">
+                    • Prescription must show registered doctor's MCI number, clinic header, and patient name.<br>
+                    • A licensed pharmacist verifies the uploaded document before approving the order for packaging.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+                <button onclick="closePrescriptionVerificationGate()" class="px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-200">
+                    Cancel
+                </button>
+                <button onclick="submitPrescriptionForOrder()" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-md transition">
+                    Submit &amp; Proceed to Order Confirmation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: SIDE-BY-SIDE MEDICINE COMPARISON   -->
+    <!-- ========================================== -->
+    <div id="comparison-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-5xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                    <h3 class="text-base font-extrabold text-slate-900">Side-by-Side Medicine Comparison</h3>
+                    <p class="text-xs text-slate-500">Compare active molecules, strength, price per pack, and safety specifications</p>
+                </div>
+                <button onclick="closeCompareModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">×</button>
+            </div>
+            <div id="comparison-table-content"></div>
+        </div>
+    </div>
+
+    <!-- Floating Comparison Bar -->
+    <div id="comparison-bar" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 border border-slate-700">
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-teal-400 uppercase">Compare (<span id="compare-items-count">0/3</span>):</span>
+            <div id="compare-thumbs" class="flex items-center gap-2"></div>
+        </div>
+        <button onclick="openCompareModal()" class="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-slate-900 rounded-xl text-xs font-black shadow transition">
+            View Comparison Table
+        </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SLIDE-OUT DRAWER: SHOPPING CART            -->
+    <!-- ========================================== -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col border-l border-slate-200">
+        
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <h3 class="text-base font-extrabold text-slate-900">Your Medicine Cart</h3>
+            </div>
+            <button id="cart-close-btn" class="p-2 text-slate-400 hover:text-slate-700 rounded-xl transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="cart-rx-notice" class="hidden px-5 py-3 bg-amber-50 border-b border-amber-200 text-amber-900 text-xs flex items-center gap-2">
+            <span>⚠️</span>
+            <span>Contains <strong>Prescription-Required</strong> items. Verification needed at checkout.</span>
+        </div>
+
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
+
+        <div class="p-5 bg-slate-50 border-t border-slate-200 space-y-3">
+            <div class="flex items-center gap-2">
+                <input id="coupon-input" type="text" placeholder="Promo code (HEALTH20, FIRSTMED)" class="flex-1 px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none uppercase font-mono">
+                <button onclick="applyCoupon()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">
+                    Apply
+                </button>
+            </div>
+
+            <div class="text-xs space-y-1.5 pt-2">
+                <div class="flex justify-between text-slate-500">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal" class="font-bold text-slate-800">₹0.00</span>
+                </div>
+                <div id="cart-discount-row" class="hidden flex justify-between text-emerald-600 font-semibold">
+                    <span>Eligible Discount</span>
+                    <span id="cart-discount">-₹0.00</span>
+                </div>
+                <div class="flex justify-between text-slate-500">
+                    <span>Delivery Charges</span>
+                    <span id="cart-delivery" class="font-bold text-slate-800">₹0.00</span>
+                </div>
+                <div class="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-200">
+                    <span>Final Total</span>
+                    <span id="cart-total" class="text-base text-teal-700">₹0.00</span>
+                </div>
+            </div>
+
+            <button id="cart-checkout-btn" onclick="initiateCheckout()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 text-white rounded-xl text-sm font-bold shadow-md transition flex items-center justify-center gap-2">
+                <span>Proceed to Checkout</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Three.js Local Library -->
+    <script src="/js/three.min.js"></script>
+    <script src="/js/medicine-3d.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

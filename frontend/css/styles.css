@@ -1,0 +1,91 @@
+/* HealthGuard Design System & Custom Components */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+    --primary: #0d9488;
+    --primary-dark: #0f766e;
+    --primary-light: #ccfbf1;
+    --medical-blue: #2563eb;
+    --surface-bg: #f8fafc;
+    --border-color: #e2e8f0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--surface-bg);
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Medicine Product Card Elevation */
+.medicine-card {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+.medicine-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+    border-color: #cbd5e1;
+}
+
+/* 3D Reminder Canvas Viewport */
+.canvas-3d-wrapper {
+    position: relative;
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f1f5f9 100%);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.canvas-3d-wrapper canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    outline: none;
+    cursor: grab;
+}
+
+.canvas-3d-wrapper canvas:active {
+    cursor: grabbing;
+}
+
+/* Stepper Track Animation */
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+}
+
+.pulse-ring-active {
+    animation: pulse-ring 2.5s infinite ease-in-out;
+}
+
+/* Image Zoom Magnifier */
+.zoom-container {
+    overflow: hidden;
+}
+.zoom-container img {
+    transition: transform 0.35s ease;
+}
